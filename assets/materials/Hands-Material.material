@@ -1,0 +1,19 @@
+material Hands-Material
+{
+technique
+{
+     pass
+     {
+          ambient 1.0 0.0 0.0 1.0
+          diffuse 1.0 1.0 0.5 1.0
+
+          lighting on
+          shading gouraud
+
+          texture_unit
+          {
+               texture HandsTexture.png
+          }
+     }
+}
+}
