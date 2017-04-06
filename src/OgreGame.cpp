@@ -5,6 +5,8 @@
 
 #include <OgreRenderSystem.h>
 #include <OgreLogManager.h>
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
 
 OgreGame::OgreGame() : m_running(false) {
      m_root = new Ogre::Root("", "");
@@ -29,8 +31,39 @@ void OgreGame::launch() {
      m_window = m_root->initialise(true, "OgreGame v0.1");
      mInput = new OISInputHandler(m_window);
      mAudio = new BassAudioPlayer();
+     initGUI();
      init();
      m_root->startRendering();
+}
+
+void OgreGame::initGUI() {
+     // Setup renderer
+     CEGUI::OgreRenderer::bootstrapSystem();
+
+     // Setup resource locaitons
+     Ogre::ResourceGroupManager& rgm = Ogre::ResourceGroupManager::getSingleton();
+     rgm.addResourceLocation("assets/cegui/imagesets", "FileSystem", "Imagesets");
+     rgm.addResourceLocation("assets/cegui/fonts", "FileSystem", "Fonts");
+     rgm.addResourceLocation("assets/cegui/schemes", "FileSystem", "Schemes");
+     rgm.addResourceLocation("assets/cegui/looknfeel", "FileSystem", "LookNFeel");
+     rgm.addResourceLocation("assets/cegui/layouts", "FileSystem", "Layouts");
+
+     CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
+     CEGUI::Font::setDefaultResourceGroup("Fonts");
+     CEGUI::Scheme::setDefaultResourceGroup("Schemes");
+     CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
+     CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
+
+     // Setup theme
+     CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+
+     CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+     CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
+     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+
+     CEGUI::Window *guiRoot = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("TextDemo.layout");
+     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
 }
 
 bool OgreGame::frameRenderingQueued(const Ogre::FrameEvent& evnt) {
@@ -38,6 +71,7 @@ bool OgreGame::frameRenderingQueued(const Ogre::FrameEvent& evnt) {
           return false;
      }
      mInput->update();
+     CEGUI::System::getSingleton().injectTimePulse(evnt.timeSinceLastFrame);
      update(evnt.timeSinceLastFrame);
      return m_running;
 }

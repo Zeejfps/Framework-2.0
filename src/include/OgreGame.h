@@ -29,6 +29,8 @@ protected:
 
 private:
      bool m_running;
+
+     void initGUI();
 };
 
 #endif /* OGRE_GAME_G */

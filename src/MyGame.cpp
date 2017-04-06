@@ -21,6 +21,8 @@ void MyGame::init() {
      float r = w/h;
      camera->setAspectRatio(r);
      mAudio->loadSample("assets/sounds/door-close.wav", "door-close");
+     mAudio->loadStream("assets/sounds/Background.mp3", "background");
+     mAudio->play("background");
 }
 
 void MyGame::update(float dt) {
@@ -29,6 +31,6 @@ void MyGame::update(float dt) {
      }
 
      if (mInput->wasButtonPressed(KC_SPACE)) {
-          mAudio->playSample("door-close");
+          mAudio->play("door-close");
      }
 }

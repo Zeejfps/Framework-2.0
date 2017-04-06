@@ -40,12 +40,18 @@ OISInputHandler::~OISInputHandler() {
 }
 
 bool OISInputHandler::keyPressed(const OIS::KeyEvent &evt) {
+     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
+     if (context.injectKeyDown((CEGUI::Key::Scan)evt.key)) return true;
+     if (context.injectChar((CEGUI::Key::Scan)evt.text)) return true;
+
      Button button = mapKeyToButton(evt.key);
      mKeysPressed[button] = true;
      return true;
 }
 
 bool OISInputHandler::keyReleased(const OIS::KeyEvent &evt) {
+     if (CEGUI::System::getSingleton().getDefaultGUIContext()
+          .injectKeyUp((CEGUI::Key::Scan)evt.key)) return true;
      Button button = mapKeyToButton(evt.key);
      mKeysReleased[button] = true;
      return true;
@@ -92,14 +98,42 @@ bool OISInputHandler::mouseMoved(const OIS::MouseEvent &evt) {
      OIS::MouseState state = evt.state;
      mAxes[MOUSE_X] = state.X.rel;
      mAxes[MOUSE_Y] = state.Y.rel;
+
+     CEGUI::GUIContext &ctx =  CEGUI::System::getSingleton().getDefaultGUIContext();
+     ctx.injectMouseMove(state.X.rel, state.Y.rel);
+     // Scroll wheel.
+     if (state.Z.rel)
+          ctx.injectMouseWheelChange(state.Z.rel / 120.0f);
      return true;
 }
 
+CEGUI::MouseButton OISInputHandler::convertButton(OIS::MouseButtonID id) {
+     switch (id) {
+          case OIS::MB_Left:
+               return CEGUI::LeftButton;
+               break;
+
+          case OIS::MB_Right:
+               return CEGUI::RightButton;
+               break;
+
+          case OIS::MB_Middle:
+               return CEGUI::MiddleButton;
+               break;
+
+          default:
+               return CEGUI::LeftButton;
+               break;
+     }
+}
+
 bool OISInputHandler::mousePressed(const OIS::MouseEvent &evt, OIS::MouseButtonID id) {
+     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertButton(id));
      return true;
 }
 
 bool OISInputHandler::mouseReleased(const OIS::MouseEvent &evt, OIS::MouseButtonID id) {
+     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertButton(id));
      return true;
 }
 

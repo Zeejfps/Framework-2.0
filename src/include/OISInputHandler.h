@@ -10,6 +10,7 @@
 #include <OISInputManager.h>
 #include <OgreRenderWindow.h>
 #include <OgreWindowEventUtilities.h>
+#include <CEGUI/CEGUI.h>
 
 class OISInputHandler : public InputHandler, public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener, public Ogre::WindowEventListener {
 public:
@@ -43,6 +44,8 @@ private:
      std::map<Button, bool> mKeysPressed;
      std::map<Button, bool> mKeysReleased;
      std::map<Axis, float> mAxes;
+
+     CEGUI::MouseButton convertButton(OIS::MouseButtonID id);
 };
 
 #endif /* OIS_INPUT_HANDLER_H */
