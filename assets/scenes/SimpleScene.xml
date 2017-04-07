@@ -33,7 +33,7 @@
                     <position x="20" y="80" z="50"/>
                </light>
           </node>
-          <node name="CameraNode">
+          <node name="PlayerNode">
                <translate x="0" y="7.5" z="14"/>
                <node name="Hands">
                     <rotate a="-180" x="0" y="1" z="0"/>

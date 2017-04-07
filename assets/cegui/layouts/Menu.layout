@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<GUILayout version="4">
+    <Window name="MenuWindow" type="OgreTray/FrameWindow">
+        <Property name="AlwaysOnTop" value="True" />
+        <Property name="MinSize" value="{{1,0},{1,0}}" />
+        <Property name="MaxSize" value="{{1,0},{1,0}}" />
+        <Property name="Position" value="{{0,0},{0,0}}" />
+        <Property name="Size" value="{{1,0},{1,0}}" />
+        <Property name="Text" value="Menu" />
+        <Property name="CloseButtonEnabled" value="False" />
+
+        <Window name="ResumeButton" type="OgreTray/Button">
+            <Property name="Position" value="{{0.25,0},{0.35,0}}" />
+            <Property name="Size" value="{{0.5,0},{0.15,0}}" />
+            <Property name="Text" value="Resume" />
+        </Window>
+
+        <Window name="ExitButton" type="OgreTray/Button">
+            <Property name="Position" value="{{0.25,0},{0.5,0}}" />
+            <Property name="Size" value="{{0.5,0},{0.15,0}}" />
+            <Property name="Text" value="Exit" />
+        </Window>
+
+   </Window>
+</GUILayout>

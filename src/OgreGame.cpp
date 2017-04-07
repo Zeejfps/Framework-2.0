@@ -53,17 +53,6 @@ void OgreGame::initGUI() {
      CEGUI::Scheme::setDefaultResourceGroup("Schemes");
      CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
      CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
-
-     // Setup theme
-     CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
-
-     CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-     CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
-     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
-
-     CEGUI::Window *guiRoot = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("TextDemo.layout");
-     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
 }
 
 bool OgreGame::frameRenderingQueued(const Ogre::FrameEvent& evnt) {
