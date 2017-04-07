@@ -5,6 +5,7 @@
 #include <OgreSceneManager.h>
 #include <CEGUI/CEGUI.h>
 #include <OgreSceneNode.h>
+#include <OgreAnimationState.h>
 
 class MyGame : public OgreGame {
 public:
@@ -24,6 +25,7 @@ private:
      bool exitBtnCallback(const CEGUI::EventArgs&);
      bool playButtonEnterSound(const CEGUI::EventArgs&);
 
+     Ogre::AnimationState *mHandsAnimations;
 };
 
 

@@ -2,6 +2,7 @@
 #include "OgreSceneParser.h"
 
 #include <iostream>
+#include <OgreEntity.h>
 
 MyGame::MyGame() {
      std::cout << "MyGame()\n";
@@ -46,6 +47,12 @@ void MyGame::init() {
      resumeBtn->subscribeEvent(CEGUI::Window::EventMouseEntersSurface, CEGUI::Event::Subscriber(&MyGame::playButtonEnterSound, this));
 
      mPlayerNode = m_sceneManager->getSceneNode("PlayerNode");
+
+     Ogre::SceneNode* node = m_sceneManager->getSceneNode("Hands");
+     Ogre::Entity* entity = (Ogre::Entity*)node->getAttachedObject("Hands");
+     mHandsAnimations = entity->getAnimationState("hands_idle");
+     mHandsAnimations->setLoop(true);
+     mHandsAnimations->setEnabled(true);
 }
 
 bool MyGame::playButtonEnterSound(const CEGUI::EventArgs& args) {
@@ -82,6 +89,9 @@ void MyGame::openGUI() {
 }
 
 void MyGame::update(float dt) {
+
+     mHandsAnimations->addTime(dt);
+
      if (mInput->wasButtonPressed(KC_ESC) || mInput->wasButtonPressed(JS_BUTTON_7)) {
           if (m_isGuiOpen)
                closeGUI();
