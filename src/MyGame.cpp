@@ -26,6 +26,7 @@ void MyGame::init() {
      mAudio->loadSample("assets/sounds/click.wav", "click");
      mAudio->loadSample("assets/sounds/load.wav", "load");
      mAudio->loadSample("assets/sounds/negative.wav", "negative");
+     mAudio->loadSample("assets/sounds/misc_sound.wav", "popout");
 
      mAudio->play("background");
 
@@ -47,12 +48,42 @@ void MyGame::init() {
      resumeBtn->subscribeEvent(CEGUI::Window::EventMouseEntersSurface, CEGUI::Event::Subscriber(&MyGame::playButtonEnterSound, this));
 
      mPlayerNode = m_sceneManager->getSceneNode("PlayerNode");
+     m_sceneManager->setSkyBox(true, "Skybox-Material");
 
      Ogre::SceneNode* node = m_sceneManager->getSceneNode("Hands");
      Ogre::Entity* entity = (Ogre::Entity*)node->getAttachedObject("Hands");
      mHandsAnimations = entity->getAnimationState("hands_idle");
      mHandsAnimations->setLoop(true);
      mHandsAnimations->setEnabled(true);
+
+     mAnimations = new Ogre::AnimationState*[5];
+
+     node = m_sceneManager->getSceneNode("Spring");
+     entity = (Ogre::Entity*)node->getAttachedObject("Spring");
+     mAnimations[0] = entity->getAnimationState("spring");
+     mAnimations[0]->setLoop(false);
+     mAnimations[0]->setEnabled(true);
+     mAnimations[0]->setTimePosition(7);
+
+     mAnimations[1] = m_sceneManager->getAnimationState("hood_open_anim");
+     mAnimations[1]->setLoop(false);
+     mAnimations[1]->setEnabled(false);
+
+     mAnimations[2] = m_sceneManager->getAnimationState("rotate");
+     mAnimations[2]->setLoop(true);
+     mAnimations[2]->setEnabled(true);
+
+     node = m_sceneManager->getSceneNode("Squirrel01");
+     entity = (Ogre::Entity*)node->getAttachedObject("Squirrel01");
+     mAnimations[3] = entity->getAnimationState("my_animation");
+     mAnimations[3]->setLoop(true);
+     mAnimations[3]->setEnabled(true);
+
+     node = m_sceneManager->getSceneNode("Squirrel02");
+     entity = (Ogre::Entity*)node->getAttachedObject("Squirrel02");
+     mAnimations[4] = entity->getAnimationState("my_animation");
+     mAnimations[4]->setLoop(true);
+     mAnimations[4]->setEnabled(true);
 }
 
 bool MyGame::playButtonEnterSound(const CEGUI::EventArgs& args) {
@@ -92,6 +123,10 @@ void MyGame::update(float dt) {
 
      mHandsAnimations->addTime(dt);
 
+     for (int i = 0; i < 5; i++) {
+          mAnimations[i]->addTime(dt);
+     }
+
      if (mInput->wasButtonPressed(KC_ESC) || mInput->wasButtonPressed(JS_BUTTON_7)) {
           if (m_isGuiOpen)
                closeGUI();
@@ -100,6 +135,14 @@ void MyGame::update(float dt) {
      }
 
      if (!m_isGuiOpen) {
+
+          if (mInput->wasButtonPressed(KC_SPACE) || mInput->wasButtonPressed(JS_BUTTON_0)) {
+               mAudio->play("popout");
+               mAnimations[0]->setTimePosition(0);
+               mAnimations[1]->setTimePosition(0);
+               mAnimations[0]->setEnabled(true);
+               mAnimations[1]->setEnabled(true);
+          }
 
           float mouseX = mInput->getAxis(MOUSE_X);
           float mouseY = mInput->getAxis(MOUSE_Y);

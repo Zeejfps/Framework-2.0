@@ -13,6 +13,7 @@
                <material file="Tree-Material.material"/>
                <material file="Wheel-Material.material"/>
                <material file="Hands-Material.material"/>
+               <material file="Skybox-Material.material"/>
           </materials>
           <meshes>
                <mesh file="Ground.mesh"/>
@@ -41,7 +42,7 @@
                     <entity name="Hands" meshFile="CZ_Hands_Mesh.mesh" material="Hands-Material"/>
                </node>
                <camera name="MainCamera">
-                    <clipping nearClipDistance="0.1" farClipDistance="100"/>
+                    <clipping nearClipDistance="0.1" farClipDistance="0"/>
                     <lookAt x="0" y="0" z="0"/>
                </camera>
           </node>

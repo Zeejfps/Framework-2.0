@@ -26,6 +26,7 @@ private:
      bool playButtonEnterSound(const CEGUI::EventArgs&);
 
      Ogre::AnimationState *mHandsAnimations;
+     Ogre::AnimationState **mAnimations;
 };
 
 
