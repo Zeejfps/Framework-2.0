@@ -22,6 +22,7 @@ private:
      void closeGUI();
      bool resumeBtnCallback(const CEGUI::EventArgs&);
      bool exitBtnCallback(const CEGUI::EventArgs&);
+     bool playButtonEnterSound(const CEGUI::EventArgs&);
 
 };
 

@@ -46,9 +46,10 @@ void BassAudioPlayer::play(const char* audio) {
      Audio a = m_audio[audio];
      int handle = a.handle;
      if (!a.isStream) {
-          handle = BASS_SampleGetChannel(handle, true);
+          BASS_SampleStop(handle);
+          handle = BASS_SampleGetChannel(handle, false);
      }
-     BASS_ChannelPlay(handle, true);
+     BASS_ChannelPlay(handle, TRUE);
 }
 
 void BassAudioPlayer::loadSample(const char* file, const char* name) {

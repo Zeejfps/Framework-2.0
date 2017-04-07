@@ -21,8 +21,11 @@ void MyGame::init() {
      float h = Ogre::Real(viewport->getActualHeight());
      float r = w/h;
      camera->setAspectRatio(r);
-     mAudio->loadSample("assets/sounds/door-close.wav", "door-close");
      mAudio->loadStream("assets/sounds/Background.mp3", "background");
+     mAudio->loadSample("assets/sounds/click.wav", "click");
+     mAudio->loadSample("assets/sounds/load.wav", "load");
+     mAudio->loadSample("assets/sounds/negative.wav", "negative");
+
      mAudio->play("background");
 
      CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
@@ -40,15 +43,24 @@ void MyGame::init() {
      resumeBtn->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&MyGame::resumeBtnCallback, this));
      exitBtn->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&MyGame::exitBtnCallback, this));
 
+     resumeBtn->subscribeEvent(CEGUI::Window::EventMouseEntersSurface, CEGUI::Event::Subscriber(&MyGame::playButtonEnterSound, this));
+
      mPlayerNode = m_sceneManager->getSceneNode("PlayerNode");
 }
 
+bool MyGame::playButtonEnterSound(const CEGUI::EventArgs& args) {
+     return true;
+}
+
+
 bool MyGame::resumeBtnCallback(const CEGUI::EventArgs& args) {
+     mAudio->play("click");
      closeGUI();
      return true;
 }
 
 bool MyGame::exitBtnCallback(const CEGUI::EventArgs& args) {
+     mAudio->play("click");
      exit();
      return true;
 }
@@ -56,6 +68,7 @@ bool MyGame::exitBtnCallback(const CEGUI::EventArgs& args) {
 void MyGame::closeGUI() {
      if (!m_isGuiOpen) return;
      m_isGuiOpen = false;
+     mAudio->play("negative");
      CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(NULL);
      CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
 }
@@ -63,20 +76,17 @@ void MyGame::closeGUI() {
 void MyGame::openGUI() {
      if (m_isGuiOpen) return;
      m_isGuiOpen = true;
+     mAudio->play("load");
      CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(m_guiWindow);
      CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
 }
 
 void MyGame::update(float dt) {
-     if (mInput->wasButtonPressed(KC_ESC)) {
+     if (mInput->wasButtonPressed(KC_ESC) || mInput->wasButtonPressed(JS_BUTTON_7)) {
           if (m_isGuiOpen)
                closeGUI();
           else
                openGUI();
-     }
-
-     if (mInput->wasButtonPressed(KC_SPACE)) {
-          mAudio->play("door-close");
      }
 
      if (!m_isGuiOpen) {
@@ -106,6 +116,11 @@ void MyGame::update(float dt) {
           else if (mInput->isButtonDown(KC_S)) {
                mPlayerNode->translate(0, 0, 10*dt, Ogre::Node::TransformSpace::TS_LOCAL);
           }
+
+          float horizontal = mInput->getAxis(JS_AXIS_0);
+          float vertical = mInput->getAxis(JS_AXIS_1);
+
+          mPlayerNode->translate(horizontal*dt*10, 0, vertical*dt*10, Ogre::Node::TransformSpace::TS_LOCAL);
      }
 
 }

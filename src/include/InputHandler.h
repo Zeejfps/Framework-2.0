@@ -20,6 +20,7 @@ enum Button {
      KC_SPACE,
      KC_ENTER,
      JS_BUTTON_0,
+     JS_BUTTON_7,
      KC_UNASSIGNED,
 };
 

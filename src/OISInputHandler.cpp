@@ -194,9 +194,13 @@ bool OISInputHandler::axisMoved(const OIS::JoyStickEvent &evt, int id) {
 }
 
 bool OISInputHandler::buttonPressed(const OIS::JoyStickEvent &evt, int button) {
+     std::cout << button << "\n";
      switch (button) {
           case 0:
                mKeysPressed[JS_BUTTON_0] = true;
+               break;
+          case 7:
+               mKeysPressed[JS_BUTTON_7] = true;
                break;
      }
      return true;
@@ -206,6 +210,9 @@ bool OISInputHandler::buttonReleased(const OIS::JoyStickEvent &evt, int button) 
      switch (button) {
           case 0:
                mKeysReleased[JS_BUTTON_0] = true;
+               break;
+          case 7:
+               mKeysReleased[JS_BUTTON_7] = true;
                break;
      }
      return true;
