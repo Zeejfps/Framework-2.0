@@ -7,6 +7,7 @@
 MyGame::MyGame() {
      std::cout << "MyGame()\n";
      m_isGuiOpen = false;
+     m_playMusic = true;
 }
 
 MyGame::~MyGame() {
@@ -32,6 +33,8 @@ void MyGame::init() {
 
      CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
      CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+     CEGUI::SchemeManager::getSingleton().createFromFile("SampleBrowser.scheme");
+     CEGUI::SchemeManager::getSingleton().createFromFile("Generic.scheme");
 
      CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
 
@@ -45,7 +48,9 @@ void MyGame::init() {
      resumeBtn->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&MyGame::resumeBtnCallback, this));
      exitBtn->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&MyGame::exitBtnCallback, this));
 
-     resumeBtn->subscribeEvent(CEGUI::Window::EventMouseEntersSurface, CEGUI::Event::Subscriber(&MyGame::playButtonEnterSound, this));
+     CEGUI::ToggleButton* musicToggle = (CEGUI::ToggleButton*) m_guiWindow->getChild("SoundToggle");
+     musicToggle->setSelected(true);
+     musicToggle->subscribeEvent(CEGUI::ToggleButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&MyGame::toggleBtnCallback, this));
 
      mPlayerNode = m_sceneManager->getSceneNode("PlayerNode");
      m_sceneManager->setSkyBox(true, "Skybox-Material");
@@ -86,7 +91,15 @@ void MyGame::init() {
      mAnimations[4]->setEnabled(true);
 }
 
-bool MyGame::playButtonEnterSound(const CEGUI::EventArgs& args) {
+bool MyGame::toggleBtnCallback(const CEGUI::EventArgs& args) {
+     if (m_playMusic) {
+          m_playMusic = false;
+          mAudio->stop("background");
+     }
+     else {
+          m_playMusic = true;
+          mAudio->play("background");
+     }
      return true;
 }
 

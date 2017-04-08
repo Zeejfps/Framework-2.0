@@ -23,8 +23,8 @@ private:
      void closeGUI();
      bool resumeBtnCallback(const CEGUI::EventArgs&);
      bool exitBtnCallback(const CEGUI::EventArgs&);
-     bool playButtonEnterSound(const CEGUI::EventArgs&);
-
+     bool m_playMusic;
+     bool toggleBtnCallback(const CEGUI::EventArgs&);
      Ogre::AnimationState *mHandsAnimations;
      Ogre::AnimationState **mAnimations;
 };

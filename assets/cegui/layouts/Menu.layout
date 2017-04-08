@@ -21,5 +21,14 @@
             <Property name="Text" value="Exit" />
         </Window>
 
+        <Window type="OgreTray/Label">
+             <Property name="Position" value="{{0.89,0},{0.93,0}}" />
+             <Property name="Size" value="{{0,100},{0,30}}" />
+             <Property name="Text" value="Music?" />
+        </Window>
+        <Window name="SoundToggle" type="OgreTray/Checkbox">
+             <Property name="Position" value="{{0.88,0},{0.93,0}}" />
+             <Property name="Size" value="{{0,30},{0,30}}" />
+        </Window>
    </Window>
 </GUILayout>
