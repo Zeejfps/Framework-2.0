@@ -27,6 +27,8 @@ private:
      bool toggleBtnCallback(const CEGUI::EventArgs&);
      Ogre::AnimationState *mHandsAnimations;
      Ogre::AnimationState **mAnimations;
+
+     void setupPhysicsWorld();
 };
 
 

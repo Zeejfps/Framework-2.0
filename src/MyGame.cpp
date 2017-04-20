@@ -1,6 +1,8 @@
 #include "MyGame.h"
 #include "OgreSceneParser.h"
 
+#include <btBulletDynamicsCommon.h>
+#include <btBulletCollisionCommon.h>
 #include <iostream>
 #include <OgreEntity.h>
 
@@ -15,6 +17,9 @@ MyGame::~MyGame() {
 }
 
 void MyGame::init() {
+
+     setupPhysicsWorld();
+
      m_sceneManager = m_root->createSceneManager(Ogre::ST_GENERIC);
      parseScene("assets/scenes/SimpleScene.xml", m_sceneManager, "SimpleScene");
      Ogre::Camera* camera = m_sceneManager->getCamera("MainCamera");
@@ -170,23 +175,28 @@ void MyGame::update(float dt) {
           mPlayerNode->pitch(Ogre::Degree(-jsAxis4*dt*50.0));
 
           if (mInput->isButtonDown(KC_A)) {
-               mPlayerNode->translate(-10*dt, 0, 0, Ogre::Node::TransformSpace::TS_LOCAL);
+               mPlayerNode->translate(-10*dt, 0, 0, Ogre::Node::TS_LOCAL);
           }
           if (mInput->isButtonDown(KC_D)) {
-               mPlayerNode->translate(10*dt, 0, 0, Ogre::Node::TransformSpace::TS_LOCAL);
+               mPlayerNode->translate(10*dt, 0, 0, Ogre::Node::TS_LOCAL);
           }
 
           if (mInput->isButtonDown(KC_W)) {
-               mPlayerNode->translate(0, 0, -10*dt, Ogre::Node::TransformSpace::TS_LOCAL);
+               mPlayerNode->translate(0, 0, -10*dt, Ogre::Node::TS_LOCAL);
           }
           else if (mInput->isButtonDown(KC_S)) {
-               mPlayerNode->translate(0, 0, 10*dt, Ogre::Node::TransformSpace::TS_LOCAL);
+               mPlayerNode->translate(0, 0, 10*dt, Ogre::Node::TS_LOCAL);
           }
 
           float horizontal = mInput->getAxis(JS_AXIS_0);
           float vertical = mInput->getAxis(JS_AXIS_1);
 
-          mPlayerNode->translate(horizontal*dt*10, 0, vertical*dt*10, Ogre::Node::TransformSpace::TS_LOCAL);
+          mPlayerNode->translate(horizontal*dt*10, 0, vertical*dt*10, Ogre::Node::TS_LOCAL);
      }
 
+}
+
+void MyGame::setupPhysicsWorld() {
+     btCollisionConfiguration* config = new btDefaultCollisionConfiguration();
+     btCollisionDispatcher* dispatcher = new btCollisionDispatcher(config);
 }
