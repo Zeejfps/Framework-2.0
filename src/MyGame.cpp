@@ -1,8 +1,7 @@
 #include "MyGame.h"
 #include "OgreSceneParser.h"
+#include "OgreMotionState.h"
 
-#include <btBulletDynamicsCommon.h>
-#include <btBulletCollisionCommon.h>
 #include <iostream>
 #include <OgreEntity.h>
 
@@ -17,9 +16,6 @@ MyGame::~MyGame() {
 }
 
 void MyGame::init() {
-
-     setupPhysicsWorld();
-
      m_sceneManager = m_root->createSceneManager(Ogre::ST_GENERIC);
      parseScene("assets/scenes/SimpleScene.xml", m_sceneManager, "SimpleScene");
      Ogre::Camera* camera = m_sceneManager->getCamera("MainCamera");
@@ -57,8 +53,10 @@ void MyGame::init() {
      musicToggle->setSelected(true);
      musicToggle->subscribeEvent(CEGUI::ToggleButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&MyGame::toggleBtnCallback, this));
 
-     mPlayerNode = m_sceneManager->getSceneNode("PlayerNode");
      m_sceneManager->setSkyBox(true, "Skybox-Material");
+
+     mPlayerNode = m_sceneManager->getSceneNode("PlayerNode");
+     mSphereNode = m_sceneManager->getSceneNode("Ball");
 
      Ogre::SceneNode* node = m_sceneManager->getSceneNode("Hands");
      Ogre::Entity* entity = (Ogre::Entity*)node->getAttachedObject("Hands");
@@ -94,6 +92,28 @@ void MyGame::init() {
      mAnimations[4] = entity->getAnimationState("my_animation");
      mAnimations[4]->setLoop(true);
      mAnimations[4]->setEnabled(true);
+
+     btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
+     btCollisionShape* sphereShape = new btSphereShape(1);
+
+     btDefaultMotionState* groundMotionState =
+                new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+
+     btRigidBody::btRigidBodyConstructionInfo
+                groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
+
+     btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+     mPhysics->mWorld->addRigidBody(groundRigidBody);
+
+     OgreMotionState* sphereMotionState =
+                new OgreMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(10, 10, 0)), mSphereNode);
+     btScalar mass = 1;
+     btVector3 fallInertia(0, 0, 0);
+     sphereShape->calculateLocalInertia(mass, fallInertia);
+
+     btRigidBody::btRigidBodyConstructionInfo sphereRigidBodyCI(mass, sphereMotionState, sphereShape, fallInertia);
+     btRigidBody* sphereRigidBody = new btRigidBody(sphereRigidBodyCI);
+     mPhysics->mWorld->addRigidBody(sphereRigidBody);
 }
 
 bool MyGame::toggleBtnCallback(const CEGUI::EventArgs& args) {
@@ -194,9 +214,4 @@ void MyGame::update(float dt) {
           mPlayerNode->translate(horizontal*dt*10, 0, vertical*dt*10, Ogre::Node::TS_LOCAL);
      }
 
-}
-
-void MyGame::setupPhysicsWorld() {
-     btCollisionConfiguration* config = new btDefaultCollisionConfiguration();
-     btCollisionDispatcher* dispatcher = new btCollisionDispatcher(config);
 }

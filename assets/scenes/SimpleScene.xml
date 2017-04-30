@@ -34,6 +34,9 @@
                     <position x="20" y="80" z="50"/>
                </light>
           </node>
+          <node name="Ball">
+               <entity meshFile="Sphere.mesh" material="Default-Material"/>
+          </node>
           <node name="PlayerNode">
                <translate x="0" y="7.5" z="14"/>
                <node name="Hands">

@@ -22,6 +22,7 @@ OgreGame::OgreGame() : m_running(false) {
 OgreGame::~OgreGame() {
      delete mInput;
      delete mAudio;
+     delete mPhysics;
      delete m_root;
 }
 
@@ -31,6 +32,7 @@ void OgreGame::launch() {
      m_window = m_root->initialise(true, "OgreGame v0.1");
      mInput = new OISInputHandler(m_window);
      mAudio = new BassAudioPlayer();
+     mPhysics = new PhysicsHandler();
      initGUI();
      init();
      m_root->startRendering();
@@ -61,6 +63,7 @@ bool OgreGame::frameRenderingQueued(const Ogre::FrameEvent& evnt) {
      }
      mInput->update();
      CEGUI::System::getSingleton().injectTimePulse(evnt.timeSinceLastFrame);
+     mPhysics->stepSimulation(evnt.timeSinceLastFrame);
      update(evnt.timeSinceLastFrame);
      return m_running;
 }

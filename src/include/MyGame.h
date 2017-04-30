@@ -19,6 +19,7 @@ private:
      CEGUI::FrameWindow* m_guiWindow;
      bool m_isGuiOpen;
      Ogre::SceneNode* mPlayerNode;
+     Ogre::SceneNode* mSphereNode;
      void openGUI();
      void closeGUI();
      bool resumeBtnCallback(const CEGUI::EventArgs&);
@@ -27,8 +28,6 @@ private:
      bool toggleBtnCallback(const CEGUI::EventArgs&);
      Ogre::AnimationState *mHandsAnimations;
      Ogre::AnimationState **mAnimations;
-
-     void setupPhysicsWorld();
 };
 
 

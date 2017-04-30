@@ -3,6 +3,7 @@
 
 #include "InputHandler.h"
 #include "AudioPlayer.h"
+#include "PhysicsHandler.h"
 
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
@@ -26,6 +27,7 @@ protected:
 
      InputHandler* mInput;
      AudioPlayer* mAudio;
+     PhysicsHandler* mPhysics;
 
 private:
      bool m_running;

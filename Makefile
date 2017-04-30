@@ -34,7 +34,7 @@ SRC_DIR := src
 INC_DIR := -I$(SRC_DIR)/include -I$(OIS_PATH)/include -I$(OGRE_PATH)/OgreMain/include -I$(BOOST_PATH) -I$(OGRE_PATH)/build/include -I$(BASS_PATH)/include -I$(CEGUI_PATH)/include -I$(BULLET_PATH)/include #-I$(TINYXML_PATH)/include
 LIB_DIR := -L$(OBJ_DIR) -L$(OIS_PATH)/lib -L$(OGRE_PATH)/build/lib -L$(BOOST_PATH)/stage/lib -L$(BASS_PATH)/lib -L$(CEGUI_PATH)/lib -L$(BULLET_PATH)/lib #-L$(TINYXML_PATH)/lib
 
-SOURCES := main.cpp MyGame.cpp OgreGame.cpp OgreSceneParser.cpp OISInputHandler.cpp BassAudioPlayer.cpp
+SOURCES := main.cpp MyGame.cpp OgreGame.cpp OgreSceneParser.cpp OISInputHandler.cpp BassAudioPlayer.cpp PhysicsHandler.cpp
 OBJECTS := $(SOURCES:%.cpp=$(OBJ_DIR)/%.o)
 
 
