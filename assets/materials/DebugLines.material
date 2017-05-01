@@ -1,0 +1,14 @@
+material "DebugLines"
+{
+     lighting off
+   receive_shadows off
+   technique
+   {
+      pass
+      {
+         ambient vertexcolour
+         diffuse vertexcolour
+         emissive vertexcolour
+      }
+   }
+}

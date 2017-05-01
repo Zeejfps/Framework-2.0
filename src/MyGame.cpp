@@ -57,6 +57,7 @@ void MyGame::init() {
 
      mPlayerNode = m_sceneManager->getSceneNode("PlayerNode");
      mSphereNode = m_sceneManager->getSceneNode("Ball");
+     mTruckNode = m_sceneManager->getSceneNode("TruckNode");
 
      Ogre::SceneNode* node = m_sceneManager->getSceneNode("Hands");
      Ogre::Entity* entity = (Ogre::Entity*)node->getAttachedObject("Hands");
@@ -64,7 +65,7 @@ void MyGame::init() {
      mHandsAnimations->setLoop(true);
      mHandsAnimations->setEnabled(true);
 
-     mAnimations = new Ogre::AnimationState*[5];
+     mAnimations = new Ogre::AnimationState*[6];
 
      node = m_sceneManager->getSceneNode("Spring");
      entity = (Ogre::Entity*)node->getAttachedObject("Spring");
@@ -77,7 +78,7 @@ void MyGame::init() {
      mAnimations[1]->setLoop(false);
      mAnimations[1]->setEnabled(false);
 
-     mAnimations[2] = m_sceneManager->getAnimationState("rotate");
+     mAnimations[2] = m_sceneManager->getAnimationState("rotatePlatform");
      mAnimations[2]->setLoop(true);
      mAnimations[2]->setEnabled(true);
 
@@ -93,6 +94,10 @@ void MyGame::init() {
      mAnimations[4]->setLoop(true);
      mAnimations[4]->setEnabled(true);
 
+     mAnimations[5] = m_sceneManager->getAnimationState("rotateTruck");
+     mAnimations[5]->setLoop(true);
+     mAnimations[5]->setEnabled(true);
+
      btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
      btCollisionShape* sphereShape = new btSphereShape(1);
 
@@ -106,14 +111,32 @@ void MyGame::init() {
      mPhysics->mWorld->addRigidBody(groundRigidBody);
 
      OgreMotionState* sphereMotionState =
-                new OgreMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(10, 10, 0)), mSphereNode);
-     btScalar mass = 1;
-     btVector3 fallInertia(0, 0, 0);
+                new OgreMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 15, 1.5)), mSphereNode);
+     btScalar mass = 10;
+     btVector3 fallInertia(0, 1, 0);
      sphereShape->calculateLocalInertia(mass, fallInertia);
 
      btRigidBody::btRigidBodyConstructionInfo sphereRigidBodyCI(mass, sphereMotionState, sphereShape, fallInertia);
      btRigidBody* sphereRigidBody = new btRigidBody(sphereRigidBodyCI);
+     sphereRigidBody->setFriction(1.0);
+     sphereRigidBody->setRollingFriction(1.0);
+     sphereRigidBody->setDamping(btScalar(0.1), btScalar(0.5));
      mPhysics->mWorld->addRigidBody(sphereRigidBody);
+
+     btCollisionShape* truckCabShape = new btBoxShape(btVector3(0.9, 0.45, 0.6));
+     btCollisionShape* truckBodyShape = new btBoxShape(btVector3(1.5, 0.35, 2.7));
+     btCompoundShape* truckShape = new btCompoundShape();
+
+     truckShape->addChildShape(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)), truckBodyShape);
+     truckShape->addChildShape(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 1.2, 0.3)), truckCabShape);
+
+     truckMotionState = new KinematicMotionState(mTruckNode);
+     btRigidBody::btRigidBodyConstructionInfo truckConstructionInfo(0, truckMotionState, truckShape);
+     btRigidBody* truckRigidBody = new btRigidBody(truckConstructionInfo);
+     truckRigidBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
+     mPhysics->mWorld->addRigidBody(truckRigidBody);
+
+     mDebugDrawer = new CDebugDraw(m_sceneManager, mPhysics->mWorld);
 }
 
 bool MyGame::toggleBtnCallback(const CEGUI::EventArgs& args) {
@@ -161,7 +184,7 @@ void MyGame::update(float dt) {
 
      mHandsAnimations->addTime(dt);
 
-     for (int i = 0; i < 5; i++) {
+     for (int i = 0; i < 6; i++) {
           mAnimations[i]->addTime(dt);
      }
 
@@ -214,4 +237,5 @@ void MyGame::update(float dt) {
           mPlayerNode->translate(horizontal*dt*10, 0, vertical*dt*10, Ogre::Node::TS_LOCAL);
      }
 
+     mDebugDrawer->Update();
 }
