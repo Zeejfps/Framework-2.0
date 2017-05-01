@@ -35,6 +35,7 @@ private:
      Ogre::AnimationState **mAnimations;
      CDebugDraw* mDebugDrawer;
      KinematicMotionState* truckMotionState;
+     void fireSphere();
 };
 
 
