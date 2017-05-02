@@ -1,6 +1,7 @@
 #include "MyGame.h"
 #include "OgreSceneParser.h"
 #include "OgreMotionState.h"
+#include "LuaBridge.h"
 
 #include <iostream>
 #include <OgreEntity.h>
@@ -16,6 +17,9 @@ MyGame::~MyGame() {
 }
 
 void MyGame::init() {
+
+     initLUA();
+
      m_sceneManager = m_root->createSceneManager(Ogre::ST_GENERIC);
      parseScene("assets/scenes/SimpleScene.xml", m_sceneManager, "SimpleScene");
      Ogre::Camera* camera = m_sceneManager->getCamera("MainCamera");
@@ -198,9 +202,9 @@ void MyGame::update(float dt) {
 
      if (mInput->wasButtonPressed(KC_ESC) || mInput->wasButtonPressed(JS_BUTTON_7)) {
           if (m_isGuiOpen)
-               closeGUI();
+               luaL_dofile(L, "assets/scripts/closeGui.lua");
           else
-               openGUI();
+               luaL_dofile(L, "assets/scripts/openGui.lua");
      }
 
      if (!m_isGuiOpen) {
@@ -211,7 +215,7 @@ void MyGame::update(float dt) {
                mAnimations[1]->setTimePosition(0);
                mAnimations[0]->setEnabled(true);
                mAnimations[1]->setEnabled(true);
-               fireSphere();
+               luaL_dofile(L, "assets/scripts/fireSphere.lua");
           }
 
           float mouseX = mInput->getAxis(MOUSE_X);
@@ -273,4 +277,19 @@ void MyGame::fireSphere() {
      Ogre::Vector3 direction = mPlayerNode->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
 
      sphereRigidBody->applyCentralImpulse(cvt(direction * 350));
+}
+
+void MyGame::initLUA() {
+     L = luaL_newstate();
+     luaL_openlibs(L);
+
+     luabridge::getGlobalNamespace(L)
+     .beginClass<MyGame>("MyGame")
+     .addFunction("openGUI", &MyGame::openGUI)
+     .addFunction("closeGUI", &MyGame::closeGUI)
+     .addFunction("fireSphere", &MyGame::fireSphere)
+     .endClass();
+
+     luabridge::push(L, this);
+     lua_setglobal(L, "myGame");
 }

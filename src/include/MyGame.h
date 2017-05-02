@@ -3,6 +3,7 @@
 
 #include "OgreGame.h"
 #include "DebugDraw.hpp"
+#include "lua.hpp"
 
 #include <OgreSceneManager.h>
 #include <CEGUI/CEGUI.h>
@@ -15,6 +16,9 @@ class MyGame : public OgreGame {
 public:
      MyGame();
      ~MyGame();
+     void openGUI();
+     void closeGUI();
+     void fireSphere();
 protected:
      void init();
      void update(float dt);
@@ -25,8 +29,6 @@ private:
      Ogre::SceneNode* mPlayerNode;
      Ogre::SceneNode* mSphereNode;
      Ogre::SceneNode* mTruckNode;
-     void openGUI();
-     void closeGUI();
      bool resumeBtnCallback(const CEGUI::EventArgs&);
      bool exitBtnCallback(const CEGUI::EventArgs&);
      bool m_playMusic;
@@ -35,7 +37,8 @@ private:
      Ogre::AnimationState **mAnimations;
      CDebugDraw* mDebugDrawer;
      KinematicMotionState* truckMotionState;
-     void fireSphere();
+     void initLUA();
+     lua_State* L;
 };
 
 
