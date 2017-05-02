@@ -6,7 +6,7 @@
 
 CXX := g++
 CXXFLAGS := -Wall -c
-LDFLAGS := -lboost_system-mgw51-mt-1_63 -lOgreMain -ltinyxml -lOIS -lbass -lCEGUIBase-0 -lCEGUIOgreRenderer-0
+LDFLAGS := -lboost_system-mgw51-mt-1_63 -lOgreMain -ltinyxml -lOIS -lbass -lBulletDynamics -lBulletCollision -lLinearMath -lCEGUIBase-0 -lCEGUIOgreRenderer-0
 
 ############## PATHS FOR WINDOWS ###############
 ################################################
@@ -16,16 +16,16 @@ TINYXML_PATH := J:/TDM-GCC-64/tinyxml_2.6.2
 OIS_PATH := J:/Game_Engine/ois
 BASS_PATH := J:/Game_Engine/bass-2.4
 CEGUI_PATH := J:/Game_Engine/cegui-0.8.7
+BULLET_PATH := J:/Game_Engine/bullet3-2.85.1
 ################################################
 
 EXECUTABLE := ZsAwesomeGame9000
 OBJ_DIR := out
 SRC_DIR := src
-INC_DIR := -I$(SRC_DIR)/include -I$(OIS_PATH)/include -I$(OGRE_PATH)/OgreMain/include -I$(BOOST_PATH) -I$(OGRE_PATH)/build/include -I$(BASS_PATH) -I$(CEGUI_PATH)/include -I$(TINYXML_PATH)/include
-LIB_DIR := -L$(OBJ_DIR) -L$(OIS_PATH)/lib -L$(OGRE_PATH)/build/lib -L$(BOOST_PATH)/stage/lib -L$(BASS_PATH) -L$(CEGUI_PATH)/lib -L$(TINYXML_PATH)/lib
+INC_DIR := -I$(SRC_DIR)/include -I$(OIS_PATH)/include -I$(OGRE_PATH)/OgreMain/include -I$(BOOST_PATH) -I$(OGRE_PATH)/build/include -I$(BASS_PATH) -I$(CEGUI_PATH)/include -I$(TINYXML_PATH)/include -I$(BULLET_PATH)/include
+LIB_DIR := -L$(OBJ_DIR) -L$(OIS_PATH)/lib -L$(OGRE_PATH)/build/lib -L$(BOOST_PATH)/stage/lib -L$(BASS_PATH) -L$(CEGUI_PATH)/lib -L$(TINYXML_PATH)/lib -L$(BULLET_PATH)/lib
 
-SOURCES := main.cpp MyGame.cpp OgreGame.cpp OgreSceneParser.cpp OISInputHandler.cpp BassAudioPlayer.cpp
-OBJECTS := $(SOURCES:%.cpp=$(OBJ_DIR)/%.o)
+SOURCES := main.cpp MyGame.cpp OgreGame.cpp OgreSceneParser.cpp OISInputHandler.cpp BassAudioPlayer.cpp PhysicsHandler.cpp DebugDraw.cpp DynamicLineDrawer.cpp
 
 
 $(EXECUTABLE) : $(OBJ_DIR) $(OBJECTS)
